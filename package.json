@@ -1,0 +1,27 @@
+{
+  "name": "henkilotieto_app",
+  "version": "1.0.0",
+  "description": "Yksinkertainen sovellus, joka tarjoaa CRUD-toiminnot henkilötiedoille.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/susannasinisalo/henkilotieto_app.git"
+  },
+  "keywords": [
+    "crud",
+    "rest-api",
+    "henkilötiedot"
+  ],
+  "author": "Susanna Sinisalo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/susannasinisalo/henkilotieto_app/issues"
+  },
+  "homepage": "https://github.com/susannasinisalo/henkilotieto_app",
+  "dependencies": {
+    "express": "^4.11.2"
+  }
+}
