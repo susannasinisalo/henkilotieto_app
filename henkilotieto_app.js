@@ -1,17 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var express = require('express');
 var app = express();
 
+var mongoose = require('mongoose');
+var db = require('./connection').db;
+var PersonalData = require('./models/PersonalData').PersonalData;
+
 app.get('/', function (req, res) {
-  res.send('Hello World!');
+    res.send('Hello World!');
 });
 
-// will match requests to /about
+/**
+ * make() returns a new element
+ * based on the passed in tag name
+ *
+ * @param <String> tag
+ * @return <Element> element
+ */
 app.get('/henkilotieto', function (req, res) {
   res.send('Tässä henkilötieto');
 });

@@ -15,6 +15,9 @@
     "rest-api",
     "henkilötiedot"
   ],
+  "dependencies": {
+    "mongodb": "~2.0"
+  },
   "author": "Susanna Sinisalo",
   "license": "ISC",
   "bugs": {
