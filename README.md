@@ -9,12 +9,12 @@ Palvelin kuuntelee porttia 3000.
 API:a käytetään seuraavalla tavalla:
 
 Kaikkien henkilötietojen hakeminen
-GET url/personaldata
+GET host/personaldata
 Palautetaan 200 ja kaikkien tietokannassa olevat henkilötietojen polut ja henkilötiedon
 nimitiedot.
 
 Henkilötiedon luominen
-POST url/personaldata + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
+POST host/personaldata + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
 dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
 Palautetaan 201 onnistuneen luonnin yhteydessä sekä luodunhenkilötiedon arvot ja
@@ -22,17 +22,17 @@ uuden henkilötiedon url. Palautetaan 400 ja opaste, jos pyynnön mukana tullut
 henkilötieto ei mennyt läpi validoinnista.
 
 Henkilötiedon poistaminen
-DELETE url/personaldata/henkilötiedon avain
+DELETE host/personaldata/henkilötiedon avain
 Palautetaan 204 onnistuneen poistamisen yhteydessä tai 404, jos henkilötietoa ei
 löytynyt annetulla avaimella.
 
 Yksittäisen henkilötiedon hakeminen
-GET url/personaldata/henkilötiedon avain
+GET host/personaldata/henkilötiedon avain
 Palautetaan 200 ja henkilötiedon kaikki tiedot tai 404, jos henkilötietoa ei
 löytynyt annetulla avaimella.
 
 Henkilötiedon muokkaaminen
-PUT url/personaldata/henkilötiedon avain + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
+PUT host/personaldata/henkilötiedon avain + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
 dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
 Palautetaan 200 sekä muokatun henkilötiedon tiedot ja url tai 404, jos henkilötietoa
