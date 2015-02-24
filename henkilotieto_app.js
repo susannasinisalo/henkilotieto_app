@@ -40,13 +40,6 @@ app.get('/personaldata', function (req, res) {
     });
 });
 
-/**
- * make() returns a new element
- * based on the passed in tag name
- *
- * @param <String> tag
- * @return <Element> element
- */
 app.post('/personaldata', function(req, res) {
     
     // Validation.
