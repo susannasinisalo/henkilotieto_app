@@ -15,8 +15,29 @@ var validator = require('validator');
 var ssnValidationSums = ["0", "1", "2", "3", "4", "5","6","7","8","9","a","b",
     "c","d","e","f","h","j","k","l","m","n","p","r","s","t","u","v","w","x","y"];
 
-app.get('/', function (req, res) {
-    res.send('Hello World!');
+app.get('/personaldata', function (req, res) {
+    PersonalData.find(function (err, docs) {
+        if (err){
+
+                // Error with database.
+                return res.json(err);
+            }
+            else{
+
+                // Data was found.
+                // Return url to resource and some more info.
+                
+                var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+                
+                var returnableData = [];
+                for (var i = 0; i < docs.length; ++i){
+                    returnableData.push({url: fullUrl + "/" + docs[i].id,
+                        firstName: docs[i].firstName, lastName: docs[i].lastName,
+                        socialSequrityNum: docs[i].socialSequrityNum});
+                }
+                res.status(200).json(returnableData);
+            }
+    });
 });
 
 /**
@@ -41,19 +62,31 @@ app.post('/personaldata', function(req, res) {
                 lastName: req.body.lastName, 
                 email: req.body.email,
                 socialSequrityNum: req.body.socialSequrityNum,
-                dateOfBirth: new Date(req.body.dateOfBirth)
+                
+                // The dates are expected to be Finnish date and time is set
+                // to 2 to make the date 00 universal time.
+                // It would have been possible to set utc -0 time with
+                // moment library but otherwise the library was a bit stiff
+                // with parsing dates so I decided to go with this implementation.
+                // TODO: Find a better way for date localisation problems.
+                dateOfBirth: new Date(req.body.dateOfBirth).setHours(2)
             });
             data.save(function (err) {
             if (err){
 
                 // Error with database.
-                return console.log(err);
+                return res.json(err);
             }
             else{
 
                 // New data was succesfully added.
-                console.log(data);
-                res.status(201).json(data);
+                // Write url for the resource to the data and send it back to client.
+                var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+                var returnableData = {url: fullUrl + "/" + data.id,
+                        firstName: data.firstName, lastName: data.lastName,
+                        email: data.email, socialSequrityNum: data.socialSequrityNum,
+                        dateOfBirth: data.dateOfBirth};
+                res.status(201).json(returnableData);
             }
           });
         }
@@ -70,19 +103,19 @@ app.get('/personaldata/:id', function(req, res) {
         if (err) {
             
             //Error occured.
-            return console.log(err);
+            return res.json(err);
         }
         else if (data) {
             
             // Data was found.
             console.log(data);
-            return res.json(data);
+            return res.status(200).json(data);
         }
         else {
             
             //Data was not found with the given parameter.
             console.log("not found");
-            return res.status(404).end();
+            return res.status(404).end("Resource not found.");
         }
     });
 });
@@ -92,7 +125,7 @@ app.delete('/personaldata/:id', function(req, res) {
         if (err) {
             
             //Error occured.
-            return console.log(err);
+            return res.json(err);
         }
         else if (data) {
             
@@ -101,7 +134,7 @@ app.delete('/personaldata/:id', function(req, res) {
                 if (err) {
             
                     //Error occured.
-                    return console.log(err);
+                    return res.json(err);
                 }
                 else {
             
@@ -114,8 +147,7 @@ app.delete('/personaldata/:id', function(req, res) {
         else {
             
             //Data was not found with the given parameter.
-            console.log("not found");
-            return res.status(404).end();
+            return res.status(404).send("Resource not found.");
         }
     });
 });
@@ -133,7 +165,7 @@ app.put('/personaldata/:id', function (req, res) {
                 if (err) {
 
                     //Error occured.
-                    return res.log(err);
+                    return res.json(err);
                 }
                 else if (data) {
 
@@ -142,22 +174,29 @@ app.put('/personaldata/:id', function (req, res) {
                     data.lastName = req.body.lastName;
                     data.email = req.body.email;
                     data.socialSequrityNum = req.body.socialSequrityNum;
-                    data.dateOfBirth = new Date(req.body.dateOfBirth);
+                    
+                    // This solution is explained in post function around line 46.
+                    data.dateOfBirth = new Date(req.body.dateOfBirth).setHours(2);
+     
+                    
                     data.save(function (err) {
                       if (err){
-                          return console.log(err);
+                          return res.json(err);
                       }
                       else{
-                          console.log(data);
-                          res.status(200).json(data);
+                            var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+                            var returnableData = {url: fullUrl,
+                                    firstName: data.firstName, lastName: data.lastName,
+                                    email: data.email, socialSequrityNum: data.socialSequrityNum,
+                                    dateOfBirth: data.dateOfBirth};
+                            res.status(200).json(returnableData);
                       }
                     });
                 }
                 else {
 
                     //Data was not found with the given parameter.
-                    console.log("not found");
-                    return res.status(404).end();
+                    return res.status(404).send("Resource not found.");
                 }
             });
         }
@@ -223,7 +262,7 @@ var validateData = function( req, callback){
                 // to one 9 digit number and it is divided by 31. The division
                 // remainder will be one of the values shown on table ssnValidationSums
                 // defined at the start of this file.
-                var ssnEnd = ssn.slice(8,12);
+                var ssnEnd = ssn.slice(7,12);
                 var ssnNumber = parseInt(ssnStart + ssnEnd);
                 var remainder = ssnNumber % 31;
                 var checkSum = ssn.slice(10,11);
@@ -249,7 +288,7 @@ var validateData = function( req, callback){
                 else{
                     
                     // Check sum didn't match the value calculated from social sequrity number given
-                    return callback(false, 400, "Validation error.");
+                    return callback(false, 400, "Validation error. checkSum " + checkSum + " taulukossa " + ssnValidationSums[remainder] + " arvo: " + ssnNumber + " ssnStart: " + ssnStart + " end: "+ ssnEnd);
                     
                 }
             }
