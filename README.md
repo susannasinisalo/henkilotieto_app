@@ -16,7 +16,7 @@ nimitiedot.
 Henkilötiedon luominen
 POST host/personaldata + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
-dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
+dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä ISO-muodossa'}
 Palautetaan 201 onnistuneen luonnin yhteydessä sekä luodunhenkilötiedon arvot ja
 uuden henkilötiedon url. Palautetaan 400 ja opaste, jos pyynnön mukana tullut
 henkilötieto ei mennyt läpi validoinnista.
@@ -34,7 +34,7 @@ löytynyt annetulla avaimella.
 Henkilötiedon muokkaaminen
 PUT host/personaldata/henkilötiedon avain + kuormana json olio muotoa {firstName: 'etunimi', lastName: 'sukunimi', 
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
-dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
+dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä ISO-muodossa'}
 Palautetaan 200 sekä muokatun henkilötiedon tiedot ja url tai 404, jos henkilötietoa
 ei löytynyt annetulla avaimella. Palautetaan 400 ja opaste, jos pyynnön mukana tullut
 henkilötieto ei mennyt läpi validoinnista.
