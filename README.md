@@ -18,7 +18,8 @@ POST url/personaldata + kuormana json olio muotoa {firstName: 'etunimi', lastNam
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
 dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
 Palautetaan 201 onnistuneen luonnin yhteydessä sekä luodunhenkilötiedon arvot ja
-uuden henkilötiedon url.
+uuden henkilötiedon url. Palautetaan 400 ja opaste, jos pyynnön mukana tullut
+henkilötieto ei mennyt läpi validoinnista.
 
 Henkilötiedon poistaminen
 DELETE url/personaldata/henkilötiedon avain
@@ -35,7 +36,8 @@ PUT url/personaldata/henkilötiedon avain + kuormana json olio muotoa {firstName
 email: 'esimerkkisposti@osoite.com', socialSequrityNum: 'oikean muotoinen sosiaaliturvatunnus',
 dateOfBirth: 'sosiaaliturvatunnukseen sopiva päivämäärä'}
 Palautetaan 200 sekä muokatun henkilötiedon tiedot ja url tai 404, jos henkilötietoa
-ei löytynyt annetulla avaimella.
+ei löytynyt annetulla avaimella. Palautetaan 400 ja opaste, jos pyynnön mukana tullut
+henkilötieto ei mennyt läpi validoinnista.
 
 Virhetilanteet:
 Tietokantavirheen sattuessa käyttäjälle palautetaan tietokannan antama virheilmoitus.
